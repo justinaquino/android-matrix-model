@@ -504,12 +504,12 @@ GET http://127.0.0.1:8765/v1/status
 
 ### 10.3 Transport & mixed-content (PNA) — Phase 0 gate
 
-bp-app is served over HTTPS at `https://bp.comfac-it.com`. AMM serves plain HTTP on `http://127.0.0.1:8765`. This crosses Chrome's Private Network Access (PNA) boundary, which requires a CORS preflight on HTTPS → loopback. Safari on iOS currently does **not** grant this exception at all.
+bp-app is served over HTTPS at `https://comfac-global-group.github.io/bp-app/`. AMM serves plain HTTP on `http://127.0.0.1:8765`. This crosses Chrome's Private Network Access (PNA) boundary, which requires a CORS preflight on HTTPS → loopback. Safari on iOS currently does **not** grant this exception at all.
 
 **AMM must respond to `OPTIONS` preflights with:**
 
 ```
-Access-Control-Allow-Origin: https://bp.comfac-it.com
+Access-Control-Allow-Origin: https://comfac-global-group.github.io/bp-app/
 Access-Control-Allow-Methods: GET, POST, OPTIONS
 Access-Control-Allow-Headers: Content-Type, Authorization
 Access-Control-Allow-Private-Network: true
@@ -517,7 +517,7 @@ Access-Control-Allow-Private-Network: true
 
 and include `Access-Control-Allow-Origin` on every real response.
 
-**Phase 0 gate:** before any Phase-1 engineering begins, a 20-line stub HTTP server (Termux Python / Node) on a real Android device must be confirmed reachable from `bp.comfac-it.com` in Chrome Android. If the PNA preflight is silently dropped or rejected, Phase 1 pivots to a **native Android bp-app client**, not a continued PWA path. Do not build Phase 1 on assumption.
+**Phase 0 gate:** before any Phase-1 engineering begins, a 20-line stub HTTP server (Termux Python / Node) on a real Android device must be confirmed reachable from `https://comfac-global-group.github.io/bp-app/` in Chrome Android. If the PNA preflight is silently dropped or rejected, Phase 1 pivots to a **native Android bp-app client**, not a continued PWA path. Do not build Phase 1 on assumption.
 
 ### 10.4 Vision request / response contract
 

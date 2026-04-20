@@ -25,7 +25,7 @@ POST http://127.0.0.1:8765/vision
 
 ### BP-app Integration
 
-bp-app (`https://bp.comfac-it.com`) calls AMM as its **primary OCR engine**:
+bp-app (`https://comfac-global-group.github.io/bp-app/`) calls AMM as its **primary OCR engine**:
 1. User captures BP monitor photo
 2. bp-app rotates image 90° (rotate90 preprocessing)
 3. bp-app `POST`s image + prompt to `http://127.0.0.1:8765/vision`

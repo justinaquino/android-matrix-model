@@ -1,0 +1,171 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :hf-model-hub-api:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :hf-model-hub-api:compileKotlin UP-TO-DATE
+> Task :hf-model-hub-api:compileJava NO-SOURCE
+> Task :hf-model-hub-api:processResources NO-SOURCE
+> Task :hf-model-hub-api:classes UP-TO-DATE
+> Task :hf-model-hub-api:jar UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :smollm:preBuild UP-TO-DATE
+> Task :smollm:preDebugBuild UP-TO-DATE
+> Task :smollm:writeDebugAarMetadata
+> Task :smollm:processDebugNavigationResources
+> Task :app:checkDebugAarMetadata
+> Task :app:processDebugNavigationResources
+> Task :app:compileDebugNavigationResources
+> Task :app:generateDebugResValues
+> Task :smollm:generateDebugResValues
+> Task :smollm:generateDebugResources
+> Task :smollm:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :smollm:extractDeepLinksDebug
+> Task :smollm:processDebugManifest
+> Task :smollm:compileDebugLibraryResources
+> Task :app:parseDebugLocalResources
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :smollm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :smollm:javaPreCompileDebug
+> Task :smollm:parseDebugLocalResources
+> Task :app:javaPreCompileDebug
+> Task :smollm:generateDebugRFile
+> Task :app:mergeDebugShaders
+
+> Task :app:mergeDebugResources
+/home/justin/opencode260220/agent260222/.gradle/caches/8.13/transforms/812b7522a6806d8ce67b2a00a490b0cd/transformed/material3-release/res/values-pt/values-pt.xml:2:4: Multiple substitutions specified in non-positional format of string resource string/label_device_ram. Did you mean to add the formatted="false" attribute?
+/home/justin/opencode260220/agent260222/.gradle/caches/8.13/transforms/b8aacf75f27cb55271b9243f7b369900/transformed/material-1.10.0/res/values/values.xml:1299:4: Multiple substitutions specified in non-positional format of string resource string/label_device_ram. Did you mean to add the formatted="false" attribute?
+/home/justin/opencode260220/agent260222/.gradle/caches/8.13/transforms/812b7522a6806d8ce67b2a00a490b0cd/transformed/material3-release/res/values-zh-rCN/values-zh-rCN.xml:2:4: Multiple substitutions specified in non-positional format of string resource string/label_device_ram. Did you mean to add the formatted="false" attribute?
+
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :smollm:mergeDebugShaders
+> Task :smollm:compileDebugShaders NO-SOURCE
+> Task :smollm:generateDebugAssets UP-TO-DATE
+> Task :smollm:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:desugarDebugFileDependencies
+> Task :app:compressDebugAssets
+> Task :app:mergeDebugJniLibFolders
+> Task :smollm:preReleaseBuild UP-TO-DATE
+> Task :smollm:configureCMakeRelease[arm64-v8a]
+> Task :smollm:buildCMakeRelease[arm64-v8a]
+> Task :app:checkDebugDuplicateClasses
+> Task :smollm:configureCMakeRelease[armeabi-v7a]
+> Task :smollm:compileDebugKotlin
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeExtDexDebug
+> Task :smollm:compileDebugJavaWithJavac NO-SOURCE
+> Task :smollm:bundleLibRuntimeToJarDebug
+> Task :smollm:bundleLibCompileToJarDebug
+> Task :smollm:processDebugJavaRes
+> Task :smollm:bundleLibRuntimeToDirDebug
+> Task :smollm:buildCMakeRelease[armeabi-v7a]
+> Task :smollm:configureCMakeRelease[x86]
+> Task :smollm:buildCMakeRelease[x86]
+> Task :smollm:configureCMakeRelease[x86_64]
+> Task :smollm:buildCMakeRelease[x86_64]
+> Task :smollm:mergeDebugJniLibFolders
+> Task :app:mergeLibDexDebug
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :smollm:checkDebugAarMetadata
+> Task :smollm:extractDebugAnnotations
+> Task :smollm:extractDeepLinksForAarDebug
+> Task :smollm:mergeDebugGeneratedProguardFiles
+> Task :smollm:mergeDebugConsumerProguardFiles
+> Task :smollm:prepareDebugArtProfile
+> Task :smollm:prepareLintJarForPublish UP-TO-DATE
+> Task :smolvectordb:preBuild UP-TO-DATE
+> Task :smolvectordb:preDebugBuild UP-TO-DATE
+> Task :smolvectordb:preReleaseBuild UP-TO-DATE
+> Task :smolvectordb:checkDebugAarMetadata
+> Task :smollm:mergeDebugJavaResource
+> Task :smolvectordb:configureCMakeRelease[arm64-v8a]
+> Task :smollm:syncDebugLibJars
+> Task :smolvectordb:buildCMakeRelease[arm64-v8a]
+> Task :smolvectordb:configureCMakeRelease[armeabi-v7a]
+> Task :smolvectordb:buildCMakeRelease[armeabi-v7a]
+> Task :smolvectordb:configureCMakeRelease[x86]
+> Task :smolvectordb:buildCMakeRelease[x86]
+> Task :smolvectordb:configureCMakeRelease[x86_64]
+> Task :smolvectordb:buildCMakeRelease[x86_64]
+> Task :smolvectordb:mergeDebugJniLibFolders
+> Task :smolvectordb:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :smolvectordb:generateDebugResValues
+> Task :smolvectordb:generateDebugResources
+> Task :smolvectordb:mergeDebugNativeLibs
+> Task :smolvectordb:packageDebugResources
+> Task :smolvectordb:processDebugNavigationResources
+> Task :smolvectordb:extractDeepLinksForAarDebug
+> Task :smolvectordb:mergeDebugShaders
+> Task :smolvectordb:parseDebugLocalResources
+> Task :smolvectordb:compileDebugShaders NO-SOURCE
+> Task :smolvectordb:generateDebugAssets UP-TO-DATE
+> Task :smolvectordb:mergeDebugAssets
+> Task :smolvectordb:stripDebugDebugSymbols
+> Task :smolvectordb:generateDebugRFile
+> Task :smolvectordb:javaPreCompileDebug
+> Task :smolvectordb:copyDebugJniLibsProjectAndLocalJars
+> Task :smolvectordb:prepareDebugArtProfile
+> Task :smolvectordb:prepareLintJarForPublish UP-TO-DATE
+> Task :smolvectordb:writeDebugAarMetadata
+> Task :smolvectordb:processDebugManifest
+> Task :smolvectordb:compileDebugKotlin
+> Task :smollm:mergeDebugNativeLibs
+> Task :smolvectordb:extractDebugAnnotations
+> Task :smolvectordb:compileDebugJavaWithJavac NO-SOURCE
+> Task :smolvectordb:mergeDebugGeneratedProguardFiles
+> Task :smolvectordb:mergeDebugConsumerProguardFiles
+> Task :smolvectordb:processDebugJavaRes
+> Task :smolvectordb:mergeDebugJavaResource
+> Task :smolvectordb:syncDebugLibJars
+> Task :smolvectordb:bundleDebugAar
+> Task :smolvectordb:assembleDebug
+> Task :smollm:stripDebugDebugSymbols
+> Task :smollm:copyDebugJniLibsProjectAndLocalJars
+> Task :smollm:copyDebugJniLibsProjectOnly
+> Task :smollm:bundleDebugAar
+> Task :smollm:assembleDebug
+> Task :app:processDebugResources
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+
+> Task :app:kspDebugKotlin
+w: [ksp] /home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/data/AppDB.kt:19: Schema export directory was not provided to the annotation processor so Room cannot export the schema. You can either provide `room.schemaLocation` annotation processor argument by applying the Room Gradle plugin (id 'androidx.room') OR set exportSchema to false.
+w: [ksp] [Experimental] Koin Configuration Check
+w: [ksp] [Experimental] Koin Configuration Check
+
+> Task :app:compileDebugKotlin
+w: file:///home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/data/SharedPrefStore.kt:27:75 Unchecked cast of 'kotlin.Boolean' to 'T'.
+w: file:///home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/data/SharedPrefStore.kt:28:71 Unchecked cast of 'kotlin.Float' to 'T'.
+w: file:///home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/data/SharedPrefStore.kt:29:67 Unchecked cast of 'kotlin.Int' to 'T'.
+w: file:///home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/data/SharedPrefStore.kt:30:73 Unchecked cast of 'kotlin.String?' to 'T'.
+w: file:///home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/data/SharedPrefStore.kt:31:69 Unchecked cast of 'kotlin.Long' to 'T'.
+w: file:///home/justin/opencode260220/android-matrix-model/app/src/main/java/io/shubham0204/smollmandroid/ui/screens/bpapp/BpAppWebViewActivity.kt:107:17 'var databaseEnabled: Boolean' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugJavaWithJavac
+The following annotation processors are not incremental: prism4j-bundler-2.0.0.jar (io.noties:prism4j-bundler:2.0.0).
+Make sure all annotation processors are incremental to improve your build speed.
+warning: Supported source version 'RELEASE_8' from annotation processor 'org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor' less than -source '17'
+1 warning
+
+> Task :app:dexBuilderDebug
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+[Incubating] Problems report is available at: file:///home/justin/opencode260220/android-matrix-model/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 7s
+117 actionable tasks: 113 executed, 4 up-to-date

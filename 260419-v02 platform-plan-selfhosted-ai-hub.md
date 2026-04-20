@@ -369,11 +369,11 @@ After models are cached, the app works fully offline. No network calls are requi
 
 **Test 1 — Private Network Access / Mixed Content (plan-killer if red)**
 
-bp-app is served from `https://bp.comfac-it.com`. AMM exposes `http://127.0.0.1:8765`. Chrome's Private Network Access (PNA) now requires a CORS preflight for HTTPS → loopback; Safari/iOS does not permit it at all.
+bp-app is served from `https://comfac-global-group.github.io/bp-app/`. AMM exposes `http://127.0.0.1:8765`. Chrome's Private Network Access (PNA) now requires a CORS preflight for HTTPS → loopback; Safari/iOS does not permit it at all.
 
 **Procedure:**
 1. Stub AMM as a 20-line Node server in Termux on a real phone (`http://127.0.0.1:8765`).
-2. Open bp-app in Chrome and Safari from `https://bp.comfac-it.com`.
+2. Open bp-app in Chrome and Safari from `https://comfac-global-group.github.io/bp-app/`.
 3. Attempt `fetch('http://127.0.0.1:8765/v1/status')`.
 
 **Outcomes:**
@@ -505,7 +505,7 @@ const ammReady = await fetch('http://127.0.0.1:8765/v1/status', {
 
 ### 10.3 PNA / Mixed-Content — Phase 0 Go/No-Go Gate
 
-bp-app is served from `https://bp.comfac-it.com`. AMM exposes `http://127.0.0.1:8765`.
+bp-app is served from `https://comfac-global-group.github.io/bp-app/`. AMM exposes `http://127.0.0.1:8765`.
 
 **Chrome:** Private Network Access (PNA) requires a CORS preflight (`Access-Control-Request-Private-Network: true`) for HTTPS → loopback. AMM must respond with `Access-Control-Allow-Private-Network: true`.
 
@@ -513,7 +513,7 @@ bp-app is served from `https://bp.comfac-it.com`. AMM exposes `http://127.0.0.1:
 
 **Go/no-go test (mandatory before JNI code):**
 1. Stub AMM as a 20-line Node server in Termux (`http://127.0.0.1:8765`).
-2. Open bp-app in Chrome and Safari from `https://bp.comfac-it.com`.
+2. Open bp-app in Chrome and Safari from `https://comfac-global-group.github.io/bp-app/`.
 3. Attempt `fetch('http://127.0.0.1:8765/v1/status')`.
 
 **Green:** Both browsers permit → proceed.

@@ -50,7 +50,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import io.shubham0204.smollmandroid.ui.theme.SmolLMAndroidTheme
 
 /**
- * Activity that loads bp-app (https://bp.comfac-it.com) in a WebView.
+ * Activity that loads bp-app (https://comfac-global-group.github.io/bp-app/) in a WebView.
  *
  * Critical configuration:
  * - mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
@@ -119,7 +119,7 @@ class BpAppWebViewActivity : ComponentActivity() {
                 ): Boolean {
                     val url = request?.url?.toString() ?: return false
                     // Open external links in the system browser
-                    if (!url.startsWith("https://bp.comfac-it.com")) {
+                    if (!url.startsWith("https://comfac-global-group.github.io/bp-app/")) {
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                         return true
                     }
@@ -155,7 +155,7 @@ class BpAppWebViewActivity : ComponentActivity() {
             // Inject a JS bridge so bp-app can detect it's running inside AMM
             addJavascriptInterface(AmmBridge(), "ammAndroid")
 
-            loadUrl("https://bp.comfac-it.com")
+            loadUrl("https://comfac-global-group.github.io/bp-app/")
         }
         return webView
     }
