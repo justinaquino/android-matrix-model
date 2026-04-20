@@ -16,6 +16,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.ConsoleMessage
+import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -152,10 +153,17 @@ class BpAppWebViewActivity : ComponentActivity() {
                 }
             }
 
+            // Clear WebView cache so old URLs never persist across updates
+            clearCache(true)
+            clearHistory()
+            CookieManager.getInstance().removeAllCookies(null)
+
             // Inject a JS bridge so bp-app can detect it's running inside AMM
             addJavascriptInterface(AmmBridge(), "ammAndroid")
 
-            loadUrl("https://comfac-global-group.github.io/bp-app/")
+            val targetUrl = "https://comfac-global-group.github.io/bp-app/"
+            android.util.Log.i("BpAppWebView", "Loading URL: $targetUrl")
+            loadUrl(targetUrl)
         }
         return webView
     }
