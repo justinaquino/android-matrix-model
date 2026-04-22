@@ -50,3 +50,6 @@
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
 -keepclassmembers class kotlinx.serialization.json.** { *; }
+
+# snakeyaml (GeckoView transitive dep) references java.beans.* which is absent on Android
+-dontwarn java.beans.**
