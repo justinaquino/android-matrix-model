@@ -11,3 +11,5 @@ local.properties
 .kotlin
 ktlint
 ktlint.bat*.apk
+*.apk
+260422-errors/

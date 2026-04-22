@@ -57,9 +57,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -76,6 +80,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -131,6 +136,8 @@ import io.shubham0204.smollmandroid.ui.screens.manage_tasks.ManageTasksActivity
 import io.shubham0204.smollmandroid.ui.theme.SmolLMAndroidTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import io.shubham0204.smollmandroid.llm.HttpService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -287,6 +294,16 @@ fun ChatActivityScreenUI(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var httpServiceRunning by remember { mutableStateOf(HttpService.isRunning) }
+
+    // Poll HTTP service status periodically
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(2000)
+            httpServiceRunning = HttpService.isRunning
+        }
+    }
+
     SmolLMAndroidTheme {
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -332,6 +349,36 @@ fun ChatActivityScreenUI(
                             }
                         },
                         actions = {
+                            val context = LocalContext.current
+                            FilterChip(
+                                onClick = {
+                                    if (httpServiceRunning) {
+                                        HttpService.stop(context)
+                                        httpServiceRunning = false
+                                        Toast.makeText(context, "HTTP service stopped", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        HttpService.start(context)
+                                        scope.launch {
+                                            delay(800)
+                                            httpServiceRunning = HttpService.isRunning
+                                            Toast.makeText(
+                                                context,
+                                                if (httpServiceRunning) "HTTP service started" else "Failed to start HTTP service",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                },
+                                label = { Text(if (httpServiceRunning) "AI ON" else "AI OFF", fontSize = 11.sp) },
+                                selected = httpServiceRunning,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = if (httpServiceRunning) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            )
                             Box {
                                 IconButton(
                                     onClick = {

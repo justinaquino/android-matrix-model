@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -314,13 +315,17 @@ private fun VisionHubScreen(
                     if (debugLines.isEmpty()) {
                         Text("No events yet.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline)
                     } else {
-                        debugLines.forEach { line ->
-                            Text(
-                                text = line,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                                modifier = Modifier.padding(vertical = 2.dp)
-                            )
+                        SelectionContainer {
+                            Column {
+                                debugLines.forEach { line ->
+                                    Text(
+                                        text = line,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                        modifier = Modifier.padding(vertical = 2.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
