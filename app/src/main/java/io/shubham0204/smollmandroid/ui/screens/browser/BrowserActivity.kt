@@ -381,7 +381,7 @@ class BrowserActivity : ComponentActivity() {
             if (window.AMMBridge) return;
             window.AMMBridge = {
                 isEmbedded: function() { return true; },
-                getAmmVersion: function() { return '1.1.4'; },
+                getAmmVersion: function() { return '1.1.5'; },
                 isHttpServiceRunning: function() {
                     return JSON.parse(window.prompt('amm-bridge', '{"method":"isHttpServiceRunning"}'));
                 },
