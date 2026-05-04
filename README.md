@@ -2,7 +2,29 @@
 
 # AMM — Android Matrix Models
 
-> **Fork of SmolChat-Android**, rebranded and extended as a self-hosted on-device AI hub.
+> **The pocket companion.**  
+> **Fork of SmolChat-Android**, rebranded and extended as the **mobile runtime for CSAMA** — a self-hosted on-device AI hub that brings your trained companions to Android.
+
+---
+
+## CSAMA: The Same Brain, Smaller Body
+
+AMM is the **Android execution layer** for [CSAMA](https://git.comfac-it.net/justin/csama) (*kasama* — companion). While CSAMA trains domain-specific LoRAs and curates the Vector DB on desktop GPUs, AMM proves the same training data can make **much smaller models useful on phones**.
+
+| | Desktop (CSAMA) | Mobile (AMM) |
+|---|---|---|
+| **Model** | Qwen2.5-Coder-7B Q4 + domain LoRAs | Qwen2.5-Coder-3B Q4 or SmolLM-1.7B |
+| **VRAM/RAM** | 8 GB dedicated | 4–8 GB shared with OS |
+| **Inference** | 10–30 tok/s (GPU) | 2–8 tok/s (CPU) |
+| **VDB** | Full Qdrant/LanceDB | Embedded top-1k subset |
+| **Role** | Training forge + heavy generation | Retrieval, scaffolding, field notes |
+
+**The bet:** If we distill the CSAMA VDB and LoRA patterns into sub-3B models, the phone becomes a **genuinely useful companion** for bash one-liners, pandas snippets, npm fixes, and HTML scaffolding — not a toy, but a *kasama* that remembers what the team proved works.
+
+See [`CSAMA_MOBILE.md`](CSAMA_MOBILE.md) for the full distillation and mobile training strategy.
+
+---
+
 > Other apps talk to AMM over a local HTTP API (`127.0.0.1:8765`) to run vision, text, and speech workloads without leaving the phone.
 
 ## Quick Start for Developers
@@ -155,11 +177,19 @@ git submodule update --init --recursive
 
 The following features/tasks are planned for the future releases of the app:
 
-- Assign names to chats automatically (just like ChatGPT and Claude)
-- Add a search bar to the navigation drawer to search for messages within chats
-- Add a background service which uses BlueTooth/HTTP/WiFi to communicate with a desktop application to send queries 
+### CSAMA Integration (Mobile Companion)
+- [ ] Load CSAMA-distilled GGUF models (3B Q4 domain LoRAs) from Forgejo releases
+- [ ] Embed VDB subset for retrieval-augmented on-device chat
+- [ ] Wire `smolvectordb` stub into chat flow for proven-solution retrieval
+- [ ] Domain-specific system prompts (bash/python/npm/web presets)
+- [ ] Sync mobile challenge logs back to CSAMA desktop forge
+
+### Core App
+- [ ] Assign names to chats automatically (just like ChatGPT and Claude)
+- [ ] Add a search bar to the navigation drawer to search for messages within chats
+- [ ] Add a background service which uses BlueTooth/HTTP/WiFi to communicate with a desktop application to send queries 
   from the desktop to the mobile device for inference
-- Enable auto-scroll when generating partial response in `ChatActivity`
-- Measure RAM consumption
-- Integrate [Android-Doc-QA](https://github.com/shubham0204/Android-Document-QA) for on-device RAG-based question answering from documents
-- Check if llama.cpp can be compiled to use Vulkan for inference on Android devices (and use the mobile GPU)
+- [ ] Enable auto-scroll when generating partial response in `ChatActivity`
+- [ ] Measure RAM consumption
+- [ ] Integrate [Android-Doc-QA](https://github.com/shubham0204/Android-Document-QA) for on-device RAG-based question answering from documents
+- [ ] Check if llama.cpp can be compiled to use Vulkan for inference on Android devices (and use the mobile GPU)
