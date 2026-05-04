@@ -24,6 +24,7 @@ import org.koin.ksp.generated.module
 class SmolChatApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        GlobalCrashHandler.install(this)
         startKoin {
             androidContext(this@SmolChatApplication)
             modules(KoinAppModule().module)

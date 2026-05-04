@@ -11,6 +11,7 @@
 package io.shubham0204.smollmandroid.ui.screens.browser
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.Intent
 import android.graphics.Bitmap
@@ -19,7 +20,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Base64
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import io.shubham0204.smollmandroid.GlobalCrashHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -135,6 +139,9 @@ class BrowserActivity : ComponentActivity() {
     private var sessionCurrentUrl: String = ""
     private var sessionTitle: String = ""
 
+    // Keep last N console messages in RAM so we can flush them on crash
+    private val recentConsoleMessages = ArrayDeque<String>(100)
+
     private val fileChooserLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val prompt = pendingFilePrompt
@@ -177,12 +184,28 @@ class BrowserActivity : ComponentActivity() {
         }
     }
 
-    private fun getOrCreateRuntime(): GeckoRuntime {
+    private fun getOrCreateRuntime(): GeckoRuntime? {
         if (!::geckoRuntime.isInitialized) {
-            val settings = GeckoRuntimeSettings.Builder()
-                .debugLogging(true)
-                .build()
-            geckoRuntime = GeckoRuntime.create(this, settings)
+            try {
+                val settings = GeckoRuntimeSettings.Builder()
+                    .debugLogging(true)
+                    .build()
+                geckoRuntime = GeckoRuntime.create(this, settings)
+                GlobalCrashHandler.appendDebug(this, "BrowserActivity", "GeckoRuntime created successfully")
+            } catch (e: Exception) {
+                GlobalCrashHandler.appendDebug(this, "BrowserActivity", "GeckoRuntime.create() FAILED: ${e.javaClass.name}: ${e.message}")
+                GlobalCrashHandler.appendDebug(this, "BrowserActivity", e.stackTraceToString())
+                Log.e("BrowserActivity", "Failed to create GeckoRuntime", e)
+                runOnUiThread {
+                    AlertDialog.Builder(this)
+                        .setTitle("Browser failed to start")
+                        .setMessage("GeckoRuntime could not be initialized.\n\n${e.javaClass.simpleName}: ${e.message}\n\nThis usually means the GeckoView native libraries are missing or incompatible with this device.\n\nCrash details have been saved to global_crashes.txt.")
+                        .setPositiveButton("OK") { _, _ -> finish() }
+                        .setCancelable(false)
+                        .show()
+                }
+                return null
+            }
         }
         return geckoRuntime
     }
@@ -199,6 +222,10 @@ class BrowserActivity : ComponentActivity() {
         onFullscreen: (Boolean) -> Unit,
     ): GeckoView {
         val runtime = getOrCreateRuntime()
+        if (runtime == null) {
+            // GeckoRuntime failed to initialize; dialog already shown. Return empty view.
+            return GeckoView(this)
+        }
 
         geckoSession = GeckoSession(GeckoSessionSettings.Builder().build()).apply {
             // Progress tracking
@@ -212,8 +239,9 @@ class BrowserActivity : ComponentActivity() {
                     onTitleChanged.invoke(sessionTitle)
                     onUrlChanged.invoke(sessionCurrentUrl)
 
-                    // Inject AMM JS bridge after page load
+                    // Inject AMM JS bridge and console capture after page load
                     injectAmmBridge()
+                    injectConsoleCapture()
 
                     // Detect manifest
                     val manifestScript = """
@@ -253,6 +281,7 @@ class BrowserActivity : ComponentActivity() {
                     request: GeckoSession.NavigationDelegate.LoadRequest
                 ): GeckoResult<AllowOrDeny>? {
                     val url = request.uri
+                    BrowserCrashLogger.logNavigation(this@BrowserActivity, url)
                     return when {
                         url.startsWith("mailto:") -> {
                             startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(url)))
@@ -314,9 +343,29 @@ class BrowserActivity : ComponentActivity() {
                 ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
                     // Intercept bridge prompts (window.prompt uses text prompt)
                     // window.prompt(message, defaultValue) -> prompt.message = message, prompt.defaultValue = defaultValue
-                    if (prompt.message == "amm-bridge") {
-                        val response = handleBridgeRequest(prompt.defaultValue ?: "{}")
-                        return GeckoResult.fromValue(prompt.confirm(response))
+                    when (prompt.message) {
+                        "amm-bridge" -> {
+                            val response = handleBridgeRequest(prompt.defaultValue ?: "{}")
+                            return GeckoResult.fromValue(prompt.confirm(response))
+                        }
+                        "amm-console" -> {
+                            try {
+                                val json = org.json.JSONObject(prompt.defaultValue ?: "{}")
+                                val level = json.optString("level", "log")
+                                val message = json.optString("message", "")
+                                val stack = json.optString("stack", "")
+                                val fullMsg = if (stack.isNotBlank()) "$message\n$stack" else message
+                                synchronized(recentConsoleMessages) {
+                                    recentConsoleMessages.addLast("[$level] $fullMsg")
+                                    while (recentConsoleMessages.size > 100) recentConsoleMessages.removeFirst()
+                                }
+                                BrowserCrashLogger.logConsole(this@BrowserActivity, level, fullMsg)
+                            } catch (e: Exception) {
+                                android.util.Log.w("BrowserActivity", "Failed to parse console message", e)
+                            }
+                            // Return empty string so JS prompt() resolves quickly
+                            return GeckoResult.fromValue(prompt.confirm(""))
+                        }
                     }
                     return super.onTextPrompt(session, prompt)
                 }
@@ -325,7 +374,20 @@ class BrowserActivity : ComponentActivity() {
             // Content delegate: console messages, fullscreen, downloads
             contentDelegate = object : GeckoSession.ContentDelegate {
                 override fun onCrash(session: GeckoSession) {
-                    android.util.Log.e("BrowserActivity", "GeckoSession crashed")
+                    android.util.Log.e("BrowserActivity", "GeckoSession crashed at url=$sessionCurrentUrl")
+                    val recent = synchronized(recentConsoleMessages) {
+                        if (recentConsoleMessages.isEmpty()) "none" else recentConsoleMessages.joinToString("\n")
+                    }
+                    BrowserCrashLogger.logCrash(
+                        this@BrowserActivity,
+                        sessionCurrentUrl,
+                        "Recent console messages:\n$recent"
+                    )
+                    Toast.makeText(
+                        this@BrowserActivity,
+                        "Browser crashed. Details logged.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
                 override fun onFullScreen(session: GeckoSession, fullScreen: Boolean) {
@@ -402,6 +464,45 @@ class BrowserActivity : ComponentActivity() {
         })();
         """.trimIndent().replace("\n", " ")
         geckoSession.loadUri("javascript:$bridgeScript")
+    }
+
+    /**
+     * Injects a JS shim that overrides console.log/error/warn and window.onerror
+     * so we can capture them via the same window.prompt() bridge.
+     */
+    private fun injectConsoleCapture() {
+        val consoleScript = """
+        (function() {
+            if (window.__ammConsoleHooked) return;
+            window.__ammConsoleHooked = true;
+            var origLog = console.log;
+            var origError = console.error;
+            var origWarn = console.warn;
+            var origInfo = console.info;
+            function send(level, args) {
+                var msg = Array.from(args).map(function(a) {
+                    try { return String(a); } catch(e) { return '[unstringable]'; }
+                }).join(' ');
+                window.prompt('amm-console', JSON.stringify({level: level, message: msg}));
+            }
+            console.log = function() { send('log', arguments); origLog.apply(console, arguments); };
+            console.error = function() { send('error', arguments); origError.apply(console, arguments); };
+            console.warn = function() { send('warn', arguments); origWarn.apply(console, arguments); };
+            console.info = function() { send('info', arguments); origInfo.apply(console, arguments); };
+            window.addEventListener('error', function(e) {
+                var msg = e.message + ' at ' + e.filename + ':' + e.lineno;
+                var stack = e.error && e.error.stack ? e.error.stack : '';
+                window.prompt('amm-console', JSON.stringify({level: 'error', message: msg, stack: stack}));
+            });
+            window.addEventListener('unhandledrejection', function(e) {
+                window.prompt('amm-console', JSON.stringify({
+                    level: 'error',
+                    message: 'Unhandled promise rejection: ' + (e.reason || e)
+                }));
+            });
+        })();
+        """.trimIndent().replace("\n", " ")
+        geckoSession.loadUri("javascript:$consoleScript")
     }
 
     private fun handleBridgeRequest(msg: String): String {
@@ -703,6 +804,27 @@ class BrowserActivity : ComponentActivity() {
                                                 StorageController.ClearFlags.ALL
                                             )
                                             scope.launch { snackbarHostState.showSnackbar("Cache cleared") }
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("View crash logs") },
+                                        onClick = {
+                                            showMenu = false
+                                            scope.launch {
+                                                val logs = BrowserCrashLogger.readLogs(this@BrowserActivity)
+                                                AlertDialog.Builder(this@BrowserActivity)
+                                                    .setTitle("Browser Crash Logs")
+                                                    .setMessage(logs.take(8000))
+                                                    .setPositiveButton("OK", null)
+                                                    .setNeutralButton("Share") { _, _ ->
+                                                        BrowserCrashLogger.shareLogs(this@BrowserActivity)
+                                                    }
+                                                    .setNegativeButton("Clear") { _, _ ->
+                                                        BrowserCrashLogger.clearLogs(this@BrowserActivity)
+                                                        scope.launch { snackbarHostState.showSnackbar("Crash logs cleared") }
+                                                    }
+                                                    .show()
+                                            }
                                         }
                                     )
                                 }

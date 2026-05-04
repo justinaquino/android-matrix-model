@@ -20,11 +20,15 @@ import CustomNavTypes
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Spanned
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.FileProvider
+import io.shubham0204.smollmandroid.GlobalCrashHandler
+import java.io.File
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -406,6 +410,36 @@ fun ChatActivityScreenUI(
                                         )
                                     },
                                     onBenchmarkModelClick = { onBenchmarkModelClick() },
+                                    onViewCrashLogsClick = {
+                                        scope.launch {
+                                            val logs = GlobalCrashHandler.readLogs(context)
+                                            AlertDialog.Builder(context)
+                                                .setTitle("Crash Logs")
+                                                .setMessage(logs.take(12000))
+                                                .setPositiveButton("OK", null)
+                                                .setNeutralButton("Share") { _, _ ->
+                                                    val file = File(context.filesDir, "global_crashes.txt")
+                                                    if (file.exists() && file.length() > 0) {
+                                                        val uri = FileProvider.getUriForFile(
+                                                            context,
+                                                            "${context.packageName}.fileprovider",
+                                                            file
+                                                        )
+                                                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                            type = "text/plain"
+                                                            putExtra(Intent.EXTRA_STREAM, uri)
+                                                            putExtra(Intent.EXTRA_SUBJECT, "AMM Crash Logs")
+                                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                        }
+                                                        context.startActivity(Intent.createChooser(shareIntent, "Share crash logs"))
+                                                    }
+                                                }
+                                                .setNegativeButton("Clear") { _, _ ->
+                                                    GlobalCrashHandler.clearLogs(context)
+                                                }
+                                                .show()
+                                        }
+                                    },
                                     onEvent = onEvent,
                                 )
                             }

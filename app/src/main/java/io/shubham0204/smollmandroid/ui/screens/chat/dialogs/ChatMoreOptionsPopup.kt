@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.Activity
 import compose.icons.feathericons.Cpu
 import compose.icons.feathericons.Delete
 import compose.icons.feathericons.Folder
@@ -54,6 +55,7 @@ private fun PreviewChatMoreOptionsPopup() {
         showRAMUsageLabel = true,
         onEditChatSettingsClick = {},
         onBenchmarkModelClick = {},
+        onViewCrashLogsClick = {},
         onEvent = {},
     )
 }
@@ -65,6 +67,7 @@ fun ChatMoreOptionsPopup(
     showRAMUsageLabel: Boolean,
     onEditChatSettingsClick: () -> Unit,
     onBenchmarkModelClick: () -> Unit,
+    onViewCrashLogsClick: () -> Unit,
     onEvent: (ChatScreenUIEvent) -> Unit,
 ) {
     DropdownMenu(
@@ -138,6 +141,12 @@ fun ChatMoreOptionsPopup(
                 ),
             ) {
                 onEvent(ChatScreenUIEvent.DialogEvents.ToggleRAMUsageLabel)
+            }
+            PopupMenuItem(
+                icon = FeatherIcons.Activity,
+                text = "View crash logs",
+            ) {
+                onViewCrashLogsClick()
             }
         }
     }

@@ -10,6 +10,9 @@
 local.properties
 .kotlin
 ktlint
-ktlint.bat*.apk
+ktlint.bat
 *.apk
 260422-errors/
+keystore.jks
+*.jks
+keystore.properties
